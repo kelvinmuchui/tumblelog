@@ -1,4 +1,4 @@
-from flask import flask
+from flask import Flask
 from flask.ext.mongoengine import MongoEngine
 
 app = Flask(__name__)
@@ -7,5 +7,22 @@ app.config["SECRET_KEY"] = "KeepThisS3cr3t"
 
 db = MongoEngine(app)
 
-if __name__ ='__main__':
-	app.run(debug = True)
+def register_blueprints(app):
+    # Prevents circular imports
+    from tumblelog.views import posts
+    app.register_blueprint(posts)
+
+register_blueprints(app)
+
+
+def register_blueprints(app):
+    # Prevents circular imports
+    from tumblelog.views import posts
+    from tumblelog.admin import admin
+    app.register_blueprint(posts)
+    app.register_blueprint(admin)
+
+
+if __name__ == '__main__':
+    app.run()
+
